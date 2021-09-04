@@ -48,11 +48,11 @@ i2s_pin_config_t i2s_mic_pins = {
     .data_in_num = I2S_MIC_SERIAL_DATA};
 
 // i2s speaker pins
-i2s_pin_config_t i2s_speaker_pins = {
+/*i2s_pin_config_t i2s_speaker_pins = {
     .bck_io_num = I2S_SPEAKER_SERIAL_CLOCK,
     .ws_io_num = I2S_SPEAKER_LEFT_RIGHT_CLOCK,
     .data_out_num = I2S_SPEAKER_SERIAL_DATA,
-    .data_in_num = I2S_PIN_NO_CHANGE};
+    .data_in_num = I2S_PIN_NO_CHANGE};*/
 
 // This task does all the heavy lifting for our application
 void applicationTask(void *param)
@@ -105,7 +105,7 @@ void setup()
 
   // start the i2s speaker output
   I2SOutput *i2s_output = new I2SOutput();
-  i2s_output->start(I2S_NUM_1, i2s_speaker_pins);
+  i2s_output->start(DAC_SPEAKER_PIN);
   Speaker *speaker = new Speaker(i2s_output);
 
   // indicator light to show when we are listening
