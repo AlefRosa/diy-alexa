@@ -60,7 +60,7 @@ bool DetectWakeWordState::run()
     if (output > 0.85)
     {
         m_number_of_detections++;
-        if (m_number_of_detections > 0)
+        if (m_number_of_detections >= 1)
         {
             m_number_of_detections = 0;
             // detected the wake word in several runs, move to the next state
