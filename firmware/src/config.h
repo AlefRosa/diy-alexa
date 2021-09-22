@@ -22,12 +22,9 @@
 #define ADC_MIC_CHANNEL ADC1_CHANNEL_7
 
 // speaker settings
-//#define I2S_SPEAKER_SERIAL_CLOCK GPIO_NUM_14
-//#define I2S_SPEAKER_LEFT_RIGHT_CLOCK GPIO_NUM_12
-//#define I2S_SPEAKER_SERIAL_DATA GPIO_NUM_27
-
-#define DAC_SPEAKER_PIN  25
-//https://www.xtronical.com/basics/audio/dacs-for-sound/playing-wav-files/
+#define I2S_SPEAKER_SERIAL_CLOCK GPIO_NUM_14
+#define I2S_SPEAKER_LEFT_RIGHT_CLOCK GPIO_NUM_12
+#define I2S_SPEAKER_SERIAL_DATA GPIO_NUM_27
 
 // command recognition settings
 #define COMMAND_RECOGNITION_ACCESS_KEY "SYV4SAWUFEMY7TQZFYQUORCXZ2EKIKUS"
