@@ -28,6 +28,7 @@ void RecogniseCommandState::enterState()
 {
     // indicate that we are now recording audio
     m_indicator_light->setState(ON);
+    Serial.printf("Entrou Aqui");
     m_speaker->playReady();
 
     // stash the start time - we will limit ourselves to 5 seconds of data
@@ -45,6 +46,7 @@ void RecogniseCommandState::enterState()
     free_ram = esp_get_free_heap_size();
     Serial.printf("Free ram after connection %d\n", free_ram);
 }
+int contX = 0;
 bool RecogniseCommandState::run()
 {
     if (!m_speech_recogniser || !m_speech_recogniser->connected())
@@ -102,7 +104,9 @@ bool RecogniseCommandState::run()
             switch (intentResult)
             {
             case SUCCESS:
-                m_speaker->playOK();
+                m_speaker->playOK2(contX);
+                contX++;
+                if(contX>1) contX = 0;
                 break;
             case FAILED:
                 m_speaker->playCantDo();

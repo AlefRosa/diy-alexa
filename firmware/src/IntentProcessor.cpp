@@ -84,9 +84,24 @@ IntentResult IntentProcessor::processIntent(const Intent &intent)
         return FAILED;
     }
     Serial.printf("Intent is %s\n", intent.intent_name.c_str());
-    if (intent.intent_name == "Turn_on_device")
+    if (intent.intent_name == "Desligar")
     {
-        return turnOnDevice(intent);
+        digitalWrite(GPIO_NUM_5, LOW);
+        return SUCCESS;
+        //return turnOnDevice(intent);
+    }
+    if (intent.intent_name == "Ligar")
+    {
+        digitalWrite(GPIO_NUM_5, HIGH);
+        return SUCCESS;
+        //return turnOnDevice(intent);
+    }
+    
+    if (intent.intent_name == "amo")
+    {
+        m_speaker->playFernanda();
+        return SILENT_SUCCESS;
+        //return turnOnDevice(intent);
     }
     if (intent.intent_name == "Tell_joke")
     {

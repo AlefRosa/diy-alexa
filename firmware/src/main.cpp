@@ -100,7 +100,7 @@ void setup()
   I2SSampler *i2s_sampler = new I2SMicSampler(i2s_mic_pins, false);
 #else
   // Use the internal ADC
-  I2SSampler *i2sSampler = new ADCSampler(ADC_UNIT_1, ADC_MIC_CHANNEL);
+  I2SSampler *i2s_sampler = new ADCSampler(ADC_UNIT_1, ADC_MIC_CHANNEL);
 #endif
 
   // start the i2s speaker output
@@ -113,7 +113,9 @@ void setup()
 
   // and the intent processor
   IntentProcessor *intent_processor = new IntentProcessor(speaker);
-  intent_processor->addDevice("kitchen", GPIO_NUM_5);
+  //intent_processor->addDevice("kitchen", GPIO_NUM_5);
+  pinMode(GPIO_NUM_5, OUTPUT);
+  digitalWrite(GPIO_NUM_5, LOW);
   intent_processor->addDevice("bedroom", GPIO_NUM_21);
   intent_processor->addDevice("table", GPIO_NUM_23);
 
@@ -128,8 +130,10 @@ void setup()
 #ifdef USE_I2S_MIC_INPUT
   i2s_sampler->start(I2S_NUM_0, i2sMemsConfigBothChannels, applicationTaskHandle);
 #else
-  i2sSampler->start(I2S_NUM_0, adcI2SConfig, applicationTaskHandle);
+  i2s_sampler->start(I2S_NUM_0, adcI2SConfig, applicationTaskHandle);
 #endif
+  while(!WiFi.isConnected());
+    speaker->playApresentacao();
 }
 
 void loop()

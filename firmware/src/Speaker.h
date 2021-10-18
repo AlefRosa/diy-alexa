@@ -11,6 +11,8 @@ private:
     WAVFileReader *m_cantdo;
     WAVFileReader *m_ready_ping;
     WAVFileReader *m_life;
+    WAVFileReader *apresentacao;
+    WAVFileReader *fernanda;
     WAVFileReader *m_jokes[5];
 
     I2SOutput *m_i2s_output;
@@ -19,10 +21,13 @@ public:
     Speaker(I2SOutput *i2s_output);
     ~Speaker();
     void playOK();
+    void playOK2(int joke);
     void playReady();
     void playCantDo();
     void playRandomJoke();
     void playLife();
+    void playApresentacao();
+    void playFernanda();
 };
 
 #endif
