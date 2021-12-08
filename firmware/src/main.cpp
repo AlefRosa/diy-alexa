@@ -12,6 +12,58 @@
 #include "Speaker.h"
 #include "IndicatorLight.h"
 
+
+#include <SPI.h>
+#include <Wire.h>
+#include <Adafruit_I2CDevice.h>
+#include <Adafruit_GFX.h>
+#include <Adafruit_SH1106.h>
+
+#define OLED_SDA 21
+#define OLED_SCL 22
+
+Adafruit_SH1106 display(OLED_SDA, OLED_SCL);
+void setupDisplay()   {                
+  Serial.begin(115200);
+  /* initialize OLED with I2C address 0x3C */
+  display.begin(SH1106_SWITCHCAPVCC, 0x3C); 
+  display.clearDisplay();
+
+}
+void drawCirculoLargo(int16_t x, int16_t y, int16_t raio, int16_t color, int16_t largura)
+{
+  for(int i; i<largura;i++)
+  {
+    display.drawCircle(x,y,raio+i, WHITE);
+  }
+}
+void loopCarinha() { 
+
+  //display.println("Hello, world!");
+  drawCirculoLargo(64,16,38, WHITE,9);
+  display.fillRect(0, 0, 128 , 46, BLACK);
+  drawCirculoLargo(32,15,6, WHITE,6);
+  drawCirculoLargo(128-32,15,6, WHITE,6);
+
+  display.display();
+  delay(2000);
+  display.fillRect(64, 0, 64 , 26, BLACK);
+  display.fillRect(128-32-11, 15, 22 , 6, WHITE);
+  display.display();
+  delay(50);
+  display.fillRect(64, 0, 64 , 26, BLACK);
+  drawCirculoLargo(128-32,15,6, WHITE,6);
+  display.display();
+  delay(50);
+  display.fillRect(64, 0, 64 , 26, BLACK);
+  display.fillRect(128-32-11, 15, 22 , 6, WHITE);
+  display.display();
+  delay(50);
+
+  display.fillRect(64, 0, 64 , 26, BLACK);
+  drawCirculoLargo(128-32,15,6, WHITE,6);
+  display.display();
+}
 // i2s config for using the internal ADC
 i2s_config_t adcI2SConfig = {
     .mode = (i2s_mode_t)(I2S_MODE_MASTER | I2S_MODE_RX | I2S_MODE_ADC_BUILT_IN),
@@ -75,11 +127,18 @@ void setup()
 {
   Serial.begin(115200);
   delay(1000);
+  setupDisplay();
   Serial.println("Starting up");
   // start up wifi
   // launch WiFi
   WiFi.mode(WIFI_STA);
   WiFi.begin(WIFI_SSID, WIFI_PSWD);
+  //WiFi.reconnect();
+  //WiFi.waitForConnectResult();
+  loopCarinha();
+  Serial.println("Tentando conectar..");
+  //delay(10000);
+  Serial.println("######");
   if (WiFi.waitForConnectResult() != WL_CONNECTED)
   {
     Serial.println("Connection Failed! Rebooting...");
@@ -100,7 +159,7 @@ void setup()
   I2SSampler *i2s_sampler = new I2SMicSampler(i2s_mic_pins, false);
 #else
   // Use the internal ADC
-  I2SSampler *i2s_sampler = new ADCSampler(ADC_UNIT_1, ADC_MIC_CHANNEL);
+  I2SSampler *i2sSampler = new ADCSampler(ADC_UNIT_1, ADC_MIC_CHANNEL);
 #endif
 
   // start the i2s speaker output
@@ -113,11 +172,11 @@ void setup()
 
   // and the intent processor
   IntentProcessor *intent_processor = new IntentProcessor(speaker);
-  //intent_processor->addDevice("kitchen", GPIO_NUM_5);
-  pinMode(GPIO_NUM_5, OUTPUT);
-  digitalWrite(GPIO_NUM_5, LOW);
-  intent_processor->addDevice("bedroom", GPIO_NUM_21);
-  intent_processor->addDevice("table", GPIO_NUM_23);
+  //intent_processor->addDevice("kitchen", GPIO_NUM_26);
+  //pinMode(GPIO_NUM_26, OUTPUT);
+  //digitalWrite(GPIO_NUM_26, LOW);
+  //intent_processor->addDevice("bedroom", GPIO_NUM_21);
+  //intent_processor->addDevice("table", GPIO_NUM_23);
 
   // create our application
   Application *application = new Application(i2s_sampler, intent_processor, speaker, indicator_light);
@@ -130,7 +189,7 @@ void setup()
 #ifdef USE_I2S_MIC_INPUT
   i2s_sampler->start(I2S_NUM_0, i2sMemsConfigBothChannels, applicationTaskHandle);
 #else
-  i2s_sampler->start(I2S_NUM_0, adcI2SConfig, applicationTaskHandle);
+  i2sSampler->start(I2S_NUM_0, adcI2SConfig, applicationTaskHandle);
 #endif
   while(!WiFi.isConnected());
     speaker->playApresentacao();

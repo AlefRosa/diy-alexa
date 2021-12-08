@@ -86,13 +86,13 @@ IntentResult IntentProcessor::processIntent(const Intent &intent)
     Serial.printf("Intent is %s\n", intent.intent_name.c_str());
     if (intent.intent_name == "Desligar")
     {
-        digitalWrite(GPIO_NUM_5, LOW);
+        //digitalWrite(GPIO_NUM_26, LOW);
         return SUCCESS;
         //return turnOnDevice(intent);
     }
     if (intent.intent_name == "Ligar")
     {
-        digitalWrite(GPIO_NUM_5, HIGH);
+        //digitalWrite(GPIO_NUM_26, HIGH);
         return SUCCESS;
         //return turnOnDevice(intent);
     }
