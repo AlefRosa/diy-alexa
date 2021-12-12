@@ -12,6 +12,8 @@
 #include "Speaker.h"
 #include "IndicatorLight.h"
 
+#include "FS.h"
+#include "SD.h"
 
 #include <SPI.h>
 #include <Wire.h>
@@ -123,6 +125,32 @@ void applicationTask(void *param)
   }
 }
 
+void setupSDCard(){
+  if(!SD.begin(5)){
+    Serial.println("Card Mount Failed");
+    return;
+  }
+  uint8_t cardType = SD.cardType();
+
+  if(cardType == CARD_NONE){
+    Serial.println("No SD card attached");
+    return;
+  }
+
+  Serial.print("SD Card Type: ");
+  if(cardType == CARD_MMC){
+    Serial.println("MMC");
+  } else if(cardType == CARD_SD){
+    Serial.println("SDSC");
+  } else if(cardType == CARD_SDHC){
+    Serial.println("SDHC");
+  } else {
+    Serial.println("UNKNOWN");
+  }
+
+  uint64_t cardSize = SD.cardSize() / (1024 * 1024);
+  Serial.printf("SD Card Size: %lluMB\n", cardSize);
+}
 void setup()
 {
   Serial.begin(115200);
@@ -150,6 +178,8 @@ void setup()
 
   // startup SPIFFS for the wav files
   SPIFFS.begin();
+  setupSDCard();
+  //new SDCard("", SD_PIN_NUM_MISO, SD_PIN_NUM_MOSI, SD_PIN_NUM_CLK, SD_PIN_NUM_CS);
   // make sure we don't get killed for our long running tasks
   esp_task_wdt_init(10, false);
 
@@ -192,7 +222,7 @@ void setup()
   i2sSampler->start(I2S_NUM_0, adcI2SConfig, applicationTaskHandle);
 #endif
   while(!WiFi.isConnected());
-    speaker->playApresentacao();
+    //speaker->playApresentacao();
 }
 
 void loop()

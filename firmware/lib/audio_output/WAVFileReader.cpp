@@ -1,6 +1,8 @@
 #include <SPIFFS.h>
 #include <FS.h>
+#include "SD.h"
 #include "WAVFileReader.h"
+#include "config.h"
 
 typedef struct
 {
@@ -24,10 +26,42 @@ typedef struct
     int data_bytes;      // Number of bytes in data. Number of samples * num_channels * sample byte size
     // uint8_t bytes[]; // Remainder of wave file is bytes
 } wav_header_t;
-
-WAVFileReader::WAVFileReader(const char *file_name, bool repeat)
+/*
+WAVFileReader::WAVFileReaderP(FILE *fp)
 {
-    m_file = SPIFFS.open(file_name, "r");
+    m_fp = fp;
+    // read the WAV header
+    fread((void *)&m_wav_header, sizeof(wav_header_t), 1, m_fp);
+    // sanity check the bit depth
+    if (m_wav_header.bit_depth != 16)
+    {
+        ESP_LOGE(TAG, "ERROR: bit depth %d is not supported\n", m_wav_header.bit_depth);
+    }
+    if (m_wav_header.num_channels != 1)
+    {
+        ESP_LOGE(TAG, "ERROR: channels %d is not supported\n", m_wav_header.num_channels);
+    }
+    ESP_LOGI(TAG, "fmt_chunk_size=%d, audio_format=%d, num_channels=%d, sample_rate=%d, sample_alignment=%d, bit_depth=%d, data_bytes=%d\n",
+             m_wav_header.fmt_chunk_size, m_wav_header.audio_format, m_wav_header.num_channels, m_wav_header.sample_rate, m_wav_header.sample_alignment, m_wav_header.bit_depth, m_wav_header.data_bytes);
+}
+*/
+
+WAVFileReader::WAVFileReader(const char *file_name, bool repeat, bool fromSD)
+{
+    if(!fromSD)
+    {
+        m_file = SPIFFS.open(file_name, "r");
+    }else
+    {
+        m_file = SD.open(file_name);
+        if(!m_file){
+            Serial.println("A A A A A A A A A ");
+            return;
+        }
+    }
+Serial.println("######################");
+   
+
     // read the WAV header
     wav_header_t wav_header;
     m_file.read((uint8_t *)&wav_header, sizeof(wav_header_t));

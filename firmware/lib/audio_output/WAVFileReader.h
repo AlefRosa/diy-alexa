@@ -13,7 +13,7 @@ private:
     File m_file;
 
 public:
-    WAVFileReader(const char *file_name, bool repeat = false);
+    WAVFileReader(const char *file_name, bool repeat = false, bool fromSD=false);
     ~WAVFileReader();
     int getFrames(Frame_t *frames, int number_frames);
     bool available();

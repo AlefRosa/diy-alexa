@@ -14,7 +14,7 @@ Speaker::Speaker(I2SOutput *i2s_output)
     m_jokes[2] = new WAVFileReader("/joke2.wav");
     //m_jokes[3] = new WAVFileReader("/joke3.wav");
     //m_jokes[4] = new WAVFileReader("/joke4.wav");
-    apresentacao = new WAVFileReader("/apresentacao.wav");
+    apresentacao = new WAVFileReader("/pd16.wav", 0, true);//new WAVFileReader("/apresentacao.wav");
     fernanda = new WAVFileReader("/fernanda.wav");
 }
 
